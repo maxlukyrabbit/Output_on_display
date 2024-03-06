@@ -1,10 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"math/rand"
 	"time"
-	"bytes"
 )
 
 type World struct {
@@ -32,7 +32,7 @@ func (w *World) Neighbours(x, y int) int {
 			if i == y && j == x {
 				continue
 			}
-			// Adjusting for torus topology
+
 			adjustedI := (i + w.Height) % w.Height
 			adjustedJ := (j + w.Width) % w.Width
 			if w.Cells[adjustedI][adjustedJ] {
@@ -42,8 +42,6 @@ func (w *World) Neighbours(x, y int) int {
 	}
 	return count
 }
-
-
 
 func (w *World) Next(x, y int) bool {
 	n := w.Neighbours(x, y)
@@ -76,20 +74,19 @@ func (w *World) Seed() {
 }
 
 func (w *World) String() string {
-    var buffer bytes.Buffer
-    for i := 0; i < w.Height; i++ {
-        for j := 0; j < w.Width; j++ {
-            if w.Cells[i][j] {
-                buffer.WriteString("\033[48;5;130m \033[0m") // Зеленый цвет для живых клеток
-            } else {
-                buffer.WriteString("\033[48;5;52m \033[0m") // Коричневый цвет для мертвых клеток
-            }
-        }
-        buffer.WriteString("\n")
-    }
-    return buffer.String()
+	var buffer bytes.Buffer
+	for i := 0; i < w.Height; i++ {
+		for j := 0; j < w.Width; j++ {
+			if w.Cells[i][j] {
+				buffer.WriteString("\033[48;5;130m \033[0m") // Зеленый цвет для живых клеток
+			} else {
+				buffer.WriteString("\033[48;5;52m \033[0m") // Коричневый цвет для мертвых клеток
+			}
+		}
+		buffer.WriteString("\n")
+	}
+	return buffer.String()
 }
-
 
 func main() {
 	height := 20
@@ -105,4 +102,3 @@ func main() {
 		time.Sleep(100 * time.Millisecond)
 	}
 }
-
